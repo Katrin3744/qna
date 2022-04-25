@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
   before_action :find_question, only: [:index, :new, :create]
+
   def index
     @answers = @question.answers
   end
