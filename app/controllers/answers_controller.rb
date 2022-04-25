@@ -4,6 +4,10 @@ class AnswersController < ApplicationController
     @answers = @question.answers
   end
 
+  def show
+    @answer = Answer.find(params[:id])
+  end
+
   private
 
   def find_question
