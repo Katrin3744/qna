@@ -5,8 +5,10 @@ table
     tr
       th scope="col" title
       th scope="col" body
+      th scope="col" View
   tbody
   - for question in @questions
     tr
       td = question.title
       td = question.body
+      td = link_to 'View question', question_path(question)
