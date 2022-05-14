@@ -14,11 +14,15 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.build(answer_params)
-    if @answer.save
-      redirect_to @answer, notice: 'Your answer successfully created.'
+    if !user_signed_in?
+      redirect_to new_user_session_path, flash: { error: 'You need to sign in or sign up before continuing.' }
     else
-      redirect_to @question, flash: { error: "Body can't be blank" }
+      @answer = @question.answers.build(answer_params)
+      if @answer.save
+        redirect_to @answer, notice: 'Your answer successfully created.'
+      else
+        redirect_to @question, flash: { error: "Body can't be blank" }
+      end
     end
   end
 
@@ -29,7 +33,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-
     params.require(:answer).permit(:body)
   end
 end
