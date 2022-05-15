@@ -4,6 +4,7 @@ feature 'User can sign up', %q{
   In order to ask questions and create answers
   I'd like to be able to sign up
 } do
+
   given(:user) { create(:user) }
 
   background { visit new_user_registration_path }

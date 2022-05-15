@@ -6,7 +6,7 @@ feature 'User can sign out', %q{
   I'd like to be able to sign out
 } do
 
-  given(:user) {create(:user)}
+  given(:user) { create(:user) }
 
   describe 'Authenticated user' do
     background do

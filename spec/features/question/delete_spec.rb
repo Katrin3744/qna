@@ -6,6 +6,7 @@ feature 'User can delete question', %q{
 } do
 
   given!(:question) { create(:question) }
+
   given(:user) { create(:user) }
 
   describe 'Authenticated user' do

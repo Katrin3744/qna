@@ -9,5 +9,4 @@ feature 'User can view the list of question', %q{
     visit questions_path
     expect(page).to have_content 'All questions'
   end
-
 end

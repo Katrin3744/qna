@@ -4,6 +4,7 @@ feature 'User can create question', %q{
   In order to get answer from a community
   I'd like to be able to ask the question
 } do
+
   given(:user) { create(:user) }
 
   describe 'Authenticated user' do
@@ -37,5 +38,4 @@ feature 'User can create question', %q{
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
-
 end
