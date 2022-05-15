@@ -2,10 +2,11 @@ h1= @question.title
 p= @question.body
 
 h2 = 'All answers'
-- for answer in @question.answers
+- for answer in @answers
   p = answer.body
+  = link_to 'Delete', answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' }
 
-= form_with model: [@question, @answer] do |f|
+= form_with model: [@question, @answer], local: true do |f|
   = f.label :body
   = f.text_area :body
   = f.submit 'Send answer'
