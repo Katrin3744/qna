@@ -6,11 +6,15 @@ table
       th scope="col" title
       th scope="col" body
       th scope="col" View
-      th scope="col" Action
+      - if user_signed_in?
+        th scope="col" Action
   tbody
-  - for question in @questions
+  - @questions.each do |question|
     tr
       td = question.title
       td = question.body
       td = link_to 'View question', question_path(question)
-      td = link_to 'Delete question', question_path(question), method: :delete, data: { confirm: 'Are you sure?' }
+      td = link_to 'Delete question',
+              question_path(question),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } if user_signed_in? &&  current_user.author_of?(question)

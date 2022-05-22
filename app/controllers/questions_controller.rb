@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :find_question, only: [:destroy, :show]
 
   def index
@@ -7,8 +7,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answers = @question.answers.all
-    @answer = @question.answers.new
+    @answer = Answer.new
   end
 
   def new
@@ -25,8 +24,8 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if @question.author == current_user
-      @question.destroy
+    if current_user.author_of?(@question)
+      @question.destroy!
       redirect_to questions_path, notice: 'Your question successfully deleted.'
     else
       redirect_to questions_path, flash: { error: "You don't have permission for that" }

@@ -14,19 +14,20 @@ feature 'User can give answer to the question', %q{
       sign_in(user)
 
       visit question_path(question)
-      scenario 'answers on a question' do
-        fill_in 'Body', with: 'answer answer answer'
-        click_on 'Send answer'
+    end
 
-        expect(page).to have_content 'Your answer successfully created.'
-        expect(page).to have_content 'answer answer answer'
-      end
+    scenario 'answers on a question' do
+      fill_in 'Body', with: 'answer answer answer'
+      click_on 'Send answer'
 
-      scenario 'answers on a question with errors' do
-        click_on 'Send answer'
+      expect(page).to have_content 'Your answer successfully created.'
+      expect(page).to have_content 'answer answer answer'
+    end
 
-        expect(page).to have_content "Body can't be blank"
-      end
+    scenario 'answers on a question with errors' do
+      click_on 'Send answer'
+
+      expect(page).to have_content "Body can't be blank"
     end
   end
 

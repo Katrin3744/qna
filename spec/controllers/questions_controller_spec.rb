@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:question) { create(:question, author: user) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 3) }
+    let(:questions) { create_list(:question, 3, author: user) }
 
     before { get :index }
 
@@ -65,6 +65,15 @@ RSpec.describe QuestionsController, type: :controller do
         post :create, params: { question: attributes_for(:question, :invalid) }
         expect(response).to render_template :new
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    let(:question) { create :question, author: user }
+    before { post :create, params: { question: question } }
+
+    it 'question from database' do
+      expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
     end
   end
 end

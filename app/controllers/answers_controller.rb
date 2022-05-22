@@ -1,34 +1,20 @@
 class AnswersController < ApplicationController
-  before_action :find_answer, only: [:show, :destroy]
-  before_action :find_question, only: [:index, :new, :create]
-
-  def index
-    @answers = @question.answers
-  end
-
-  def show
-  end
-
-  def new
-    @answer = @question.answers.new
-  end
+  before_action :authenticate_user!
+  before_action :find_answer, only: :destroy
+  before_action :find_question, only: [:index, :create]
 
   def create
-    if !user_signed_in?
-      redirect_to new_user_session_path, flash: { error: 'You need to sign in or sign up before continuing.' }
+    @answer = current_user.answers.build(answer_params)
+    @answer.question = @question
+    if @answer.save
+      redirect_to @answer.question, notice: 'Your answer successfully created.'
     else
-      @answer = current_user.answers.build(answer_params)
-      @answer.question = @question
-      if @answer.save
-        redirect_to @answer, notice: 'Your answer successfully created.'
-      else
-        redirect_to @question, flash: { error: "Body can't be blank" }
-      end
+      render 'questions/show'
     end
   end
 
   def destroy
-    if @answer.author == current_user
+    if current_user.author_of?(@answer)
       @answer.destroy
       redirect_to @answer.question, notice: 'Your answer successfully deleted.'
     else
