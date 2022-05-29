@@ -10,6 +10,10 @@
   </head>
 
   <body>
+    <% if user_signed_in? %>
+       <%= render "layouts/navbar_for_logged_in" %>
+    <%end%>
+    <%= flash_messages %>
     <%= yield %>
   </body>
 </html>

@@ -1,24 +1,24 @@
 class AnswersController < ApplicationController
-  before_action :find_question, only: [:index, :new, :create]
-
-  def index
-    @answers = @question.answers
-  end
-
-  def show
-    @answer = Answer.find(params[:id])
-  end
-
-  def new
-    @answer = @question.answers.new
-  end
+  before_action :authenticate_user!
+  before_action :find_answer, only: :destroy
+  before_action :find_question, only: [:index, :create]
 
   def create
-    @answer = @question.answers.build(answer_params)
+    @answer = current_user.answers.build(answer_params)
+    @answer.question = @question
     if @answer.save
-      redirect_to @answer
+      redirect_to @answer.question, notice: 'Your answer successfully created.'
     else
-      render :new
+      render 'questions/show'
+    end
+  end
+
+  def destroy
+    if current_user.author_of?(@answer)
+      @answer.destroy
+      redirect_to @answer.question, notice: 'Your answer successfully deleted.'
+    else
+      redirect_to @answer.question, flash: { error: "You don't have permission for that" }
     end
   end
 
@@ -28,8 +28,11 @@ class AnswersController < ApplicationController
     @question = Question.find(params[:question_id])
   end
 
-  def answer_params
+  def find_answer
+    @answer = Answer.find(params[:id])
+  end
 
+  def answer_params
     params.require(:answer).permit(:body)
   end
 end

@@ -1,10 +1,21 @@
+h1 = 'All questions'
+p= link_to 'Ask question', new_question_path
 table
   thead
     tr
       th scope="col" title
       th scope="col" body
+      th scope="col" View
+      - if user_signed_in?
+        th scope="col" Action
   tbody
-  - for question in @questions
+  - @questions.each do |question|
     tr
       td = question.title
       td = question.body
+      td = link_to 'View question', question_path(question)
+      - if current_user&.author_of?(question)
+        td = link_to 'Delete question',
+                question_path(question),
+                method: :delete,
+                data: { confirm: 'Are you sure?' }
