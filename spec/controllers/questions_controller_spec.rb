@@ -70,10 +70,37 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     let(:question) { create :question, author: user }
-    before { post :create, params: { question: question } }
+    before do
+      post :create, params: { question: question }
+      login(user)
+    end
 
-    it 'question from database' do
-      expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+    context 'with user that is author of question' do
+      it 'delete question from database' do
+        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to question index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'with user that is not author of question' do
+      let!(:user_not_author) { create(:user) }
+      before do
+        logout(user)
+        login(user_not_author)
+      end
+
+      it "don't delete question from database" do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+      end
+
+      it 'redirects to question index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
     end
   end
 end

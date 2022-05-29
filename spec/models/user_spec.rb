@@ -11,7 +11,7 @@ RSpec.describe User, type: :model do
     let(:answer) { create :answer, question: question, author: user }
 
     it 'should be true when answer belongs to user' do
-      expect(user.author_of?(answer)).to be true
+      expect(user).to be_author_of(answer)
     end
 
     it 'should be false when answer does not belong to user' do
